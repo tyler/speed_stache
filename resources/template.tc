@@ -1,0 +1,68 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ruby.h>
+
+typedef struct _node {
+  char * string;
+  int size;
+  struct _node * next;
+} node;
+
+typedef struct _linked_list {
+  node * head;
+  node * tail;  
+} linked_list;
+
+void push(linked_list * list, char * string, int size) {
+  node * new_node = (node *) malloc(sizeof(node));
+  new_node->string = string;
+  new_node->size = size;
+  new_node->next = NULL;
+  list->tail->next = new_node;
+  list->tail = new_node;
+}
+
+VALUE rb_compiled_template(VALUE self) {
+
+	linked_list * output_list = (linked_list *) malloc(sizeof(linked_list));
+	node * head = (node *) malloc(sizeof(node));
+	output_list->head = head;
+	output_list->tail = head;
+	
+	int out_size = 0;
+
+	VALUE context = self;	
+	VALUE temp;
+	char * temp_string;
+
+	{{CODE}}
+
+	char * final_output = (char *) malloc(out_size + 1);
+
+	int output_index = 0;
+	node * current_node = output_list->head;
+	node * last_node = current_node;
+	
+	while(current_node = current_node->next) {
+		free(last_node);
+		memcpy(final_output + output_index, current_node->string, current_node->size);
+		output_index += current_node->size;
+		last_node = current_node;
+	}
+	
+	free(last_node);
+	free(output_list);
+	final_output[out_size] = '\0';
+	
+	return rb_str_new2(final_output);
+	
+}
+
+VALUE cTemplate;
+
+void Init_{{NAME}}_template() {
+	cTemplate = rb_define_module("{{CLASS_NAME}}Template");
+	rb_define_method(cTemplate, "compiled_template", rb_compiled_template, 0);
+}
+

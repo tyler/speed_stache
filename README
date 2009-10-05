@@ -1,0 +1,63 @@
+Speed 'Stache compiles Mustache templates to C, and ultimately to object files which can be required in your Ruby code.  It also provides a simple extension to Mustache to use those object files.
+
+simple.html ---
+
+  <div>
+    Dear {{name}},
+
+    What's up?
+    {{#cool?}} You're cool! {{/cool?}}
+
+    Love,
+    Tyler
+  </div>
+
+
+simple.rb ---
+
+  require 'mustache'
+
+  class Simple < Mustache
+    def name
+      "Bob"
+    end
+
+    def cool?
+      true
+    end
+  end
+
+  Simple.new.to_html
+
+
+Pretty simple example.  Obviously you just drop these files in the same directory, require mustache and go to town.  Using Speed 'Stache isn't much harder.
+
+The first step is to actually compile the templates.  At a Terminal...
+  
+  speed_stache/bin/compile_mustache simple.html
+
+That should output some Makefile junk and leave you with a simple_template.o file.
+
+Next we modify simple.rb above to the following:
+
+simple.rb ---
+
+  require 'mustache'
+  require 'speed_stache'
+  require 'simple_template'
+
+  class Simple < Mustache
+    include SimpleTemplate
+
+    def name
+      "Bob"
+    end
+
+    def cool?
+      true
+    end
+  end
+
+  Simple.new.to_html
+
+It should output roughly the same thing as the first run above, but about 50 times faster!

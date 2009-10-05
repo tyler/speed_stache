@@ -1,0 +1,30 @@
+#!/usr/bin/env ruby
+
+unless ARGV.size > 0
+  puts 'Usage: compile_mustache <mustache_file>'
+  exit
+end
+
+$LOAD_PATH << File.dirname(__FILE__) + '/../lib'
+
+require 'speed_stache'
+require 'speed_stache/compiler'
+
+compiler = SpeedStache::Compiler.new(ARGF)
+filename = "#{compiler.name}_template.c"
+File.open(filename, 'w') do |f|
+  f.puts compiler.compile
+end
+
+require 'mkmf'
+$srcs = [filename]
+$objs = [filename.gsub(/(\.c)$/, '.o')]
+
+create_makefile filename.gsub(/(\.c)$/, '')
+
+if system('make')
+  `rm Makefile`
+  #`rm #{filename}`
+else
+  puts 'Make failed.'
+end
