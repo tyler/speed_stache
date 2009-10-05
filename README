@@ -61,3 +61,8 @@ simple.rb ---
   Simple.new.to_html
 
 It should output roughly the same thing as the first run above, but about 50 times faster!
+
+
+*** LIMITATIONS ***
+
+This doesn't actually implement Mustache in full yet.  It handles output and conditionals, but that's it.  No partials, no iterators... Not yet anyway!
