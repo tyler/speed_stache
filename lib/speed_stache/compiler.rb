@@ -378,9 +378,9 @@ when 9 then
 		begin
 te = p+1
  begin 
-          @code << "if(RTEST(TYPE(context) == T_HASH ? \n"
-          @code << "   rb_hash_aref(context, ID2SYM(rb_intern(#{@buffer.dump}))) : \n"
-          @code << "   rb_funcall(context, rb_intern(#{@buffer.dump}), 0))) {\n"
+          @code << "if(RTEST(TYPE(context) == T_HASH ? \n" \
+                   "   rb_hash_aref(context, ID2SYM(rb_intern(#{@buffer.dump}))) :\n" \
+                   "   rb_funcall(context, rb_intern(#{@buffer.dump}), 0))) {\n"
 
           @buffer = ''
           	begin
@@ -466,9 +466,13 @@ te = p+1
           @code << "       rb_hash_aref(context, ID2SYM(rb_intern(#{@buffer.dump}))) :\n"
           @code << "       rb_funcall(context, rb_intern(#{@buffer.dump}), 0);\n"
           @code << "StringValue(temp);\n"
-          @code << "push(output_list, RSTRING(temp)->ptr, RSTRING(temp)->len);\n"
+          # @code << "push(output_list, RSTRING(temp)->ptr, RSTRING(temp)->len);\n"
+          @code << "c#{@var_counter} = RSTRING(temp)->ptr;\n"
+          @code << "s#{@var_counter} = RSTRING(temp)->len;\n"
           @code << "out_size += RSTRING(temp)->len;\n"
+
           @buffer = ''
+          @var_counter += 1
 
           	begin
 		cs = 7
@@ -481,49 +485,49 @@ te = p+1
 		end
 # line 51 "../util/../lib/speed_stache/compiler.rl"
 when 18 then
-# line 63 "../util/../lib/speed_stache/compiler.rl"
+# line 67 "../util/../lib/speed_stache/compiler.rl"
 		begin
 te = p+1
  begin 
           @buffer << data[p].chr
          end
 		end
-# line 63 "../util/../lib/speed_stache/compiler.rl"
+# line 67 "../util/../lib/speed_stache/compiler.rl"
 when 19 then
-# line 63 "../util/../lib/speed_stache/compiler.rl"
+# line 67 "../util/../lib/speed_stache/compiler.rl"
 		begin
 te = p
 p = p - 1; begin 
           @buffer << data[p].chr
          end
 		end
-# line 63 "../util/../lib/speed_stache/compiler.rl"
+# line 67 "../util/../lib/speed_stache/compiler.rl"
 when 20 then
-# line 63 "../util/../lib/speed_stache/compiler.rl"
+# line 67 "../util/../lib/speed_stache/compiler.rl"
 		begin
  begin p = ((te))-1; end
  begin 
           @buffer << data[p].chr
          end
 		end
-# line 63 "../util/../lib/speed_stache/compiler.rl"
+# line 67 "../util/../lib/speed_stache/compiler.rl"
 when 21 then
-# line 98 "../util/../lib/speed_stache/compiler.rl"
+# line 102 "../util/../lib/speed_stache/compiler.rl"
 		begin
 te = p+1
  begin 
           @buffer << data[p].chr
          end
 		end
-# line 98 "../util/../lib/speed_stache/compiler.rl"
-when 22 then
 # line 102 "../util/../lib/speed_stache/compiler.rl"
+when 22 then
+# line 106 "../util/../lib/speed_stache/compiler.rl"
 		begin
 te = p+1
 		end
-# line 102 "../util/../lib/speed_stache/compiler.rl"
+# line 106 "../util/../lib/speed_stache/compiler.rl"
 when 23 then
-# line 69 "../util/../lib/speed_stache/compiler.rl"
+# line 73 "../util/../lib/speed_stache/compiler.rl"
 		begin
 te = p
 p = p - 1; begin 
@@ -537,27 +541,27 @@ p = p - 1; begin
 
          end
 		end
-# line 69 "../util/../lib/speed_stache/compiler.rl"
+# line 73 "../util/../lib/speed_stache/compiler.rl"
 when 24 then
-# line 74 "../util/../lib/speed_stache/compiler.rl"
+# line 78 "../util/../lib/speed_stache/compiler.rl"
 		begin
 te = p
 p = p - 1; begin 
           # partial
          end
 		end
-# line 74 "../util/../lib/speed_stache/compiler.rl"
-when 25 then
 # line 78 "../util/../lib/speed_stache/compiler.rl"
+when 25 then
+# line 82 "../util/../lib/speed_stache/compiler.rl"
 		begin
 te = p
 p = p - 1; begin 
           @buffer << '{{'
          end
 		end
-# line 78 "../util/../lib/speed_stache/compiler.rl"
-when 26 then
 # line 82 "../util/../lib/speed_stache/compiler.rl"
+when 26 then
+# line 86 "../util/../lib/speed_stache/compiler.rl"
 		begin
 te = p
 p = p - 1; begin 
@@ -571,9 +575,9 @@ p = p - 1; begin
 
          end
 		end
-# line 82 "../util/../lib/speed_stache/compiler.rl"
+# line 86 "../util/../lib/speed_stache/compiler.rl"
 when 27 then
-# line 87 "../util/../lib/speed_stache/compiler.rl"
+# line 91 "../util/../lib/speed_stache/compiler.rl"
 		begin
 te = p
 p = p - 1; begin 
@@ -587,9 +591,9 @@ p = p - 1; begin
 
          end
 		end
-# line 87 "../util/../lib/speed_stache/compiler.rl"
+# line 91 "../util/../lib/speed_stache/compiler.rl"
 when 28 then
-# line 92 "../util/../lib/speed_stache/compiler.rl"
+# line 96 "../util/../lib/speed_stache/compiler.rl"
 		begin
 te = p
 p = p - 1; begin 
@@ -604,17 +608,17 @@ p = p - 1; begin
 
          end
 		end
-# line 92 "../util/../lib/speed_stache/compiler.rl"
+# line 96 "../util/../lib/speed_stache/compiler.rl"
 when 29 then
-# line 98 "../util/../lib/speed_stache/compiler.rl"
+# line 102 "../util/../lib/speed_stache/compiler.rl"
 		begin
 te = p
 p = p - 1; begin 
           @buffer << data[p].chr
          end
 		end
-# line 98 "../util/../lib/speed_stache/compiler.rl"
-# line 618 "../util/../lib/speed_stache/compiler.rb"
+# line 102 "../util/../lib/speed_stache/compiler.rl"
+# line 622 "../util/../lib/speed_stache/compiler.rb"
 			end # action switch
 		end
 	end
@@ -635,7 +639,7 @@ when 0 then
 		begin
 ts = nil;		end
 # line 1 "../util/../lib/speed_stache/compiler.rl"
-# line 639 "../util/../lib/speed_stache/compiler.rb"
+# line 643 "../util/../lib/speed_stache/compiler.rb"
 		end # to state action switch
 	end
 	if _trigger_goto
@@ -666,7 +670,7 @@ end
 	end
 	end
 
-# line 108 "../util/../lib/speed_stache/compiler.rl"
+# line 112 "../util/../lib/speed_stache/compiler.rl"
 
 
     flush
@@ -676,11 +680,14 @@ end
     template.gsub! '{{NAME}}', @name
     template.gsub! '{{CLASS_NAME}}', @name.capitalize
     template.gsub! '{{CODE}}', @code
+    template.gsub! '{{DEFINITIONS}}', definitions
+    template.gsub! '{{COMBINE}}', combine
   end
 
   def initialize(file)
     @code = ''
     @buffer = ''
+    @var_counter = 0
 
     @name = File.basename(file.path).split('.').first
 
@@ -691,15 +698,30 @@ end
   attr_reader :data, :eof, :name
 
   def flush
-    @code << "push(output_list, #{@buffer.dump}, #{@buffer.size});\n"
+    @code << "c#{@var_counter} = #{@buffer.dump};\n"
+    @code << "s#{@var_counter} = #{@buffer.size};\n"
     @code << "out_size += #{@buffer.size};\n"
+
+    @var_counter += 1
+
     @buffer = ''
   end
-end
 
-if __FILE__ == $0
-  compiler = TemplateCompiler.new(ARGF)
-  File.open("#{compiler.name}_template.c",'w') do |f|
-    f.puts compiler.compile
+  def combine
+    code = ''
+    (0..@var_counter-1).each do |index|
+      code << "memcpy(final_output + output_index, c#{index}, s#{index});\n"
+      code << "output_index += s#{index};\n"
+    end
+    code
+  end
+
+  def definitions
+    code = ''
+    (0..@var_counter-1).each do |index|
+      code << "char * c#{index};\n"
+      code << "int s#{index};\n"
+    end
+    code
   end
 end

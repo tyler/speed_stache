@@ -25,9 +25,9 @@ class SpeedStache::Compiler
 
       block := |*
         space* '}}' {
-          @code << "if(RTEST(TYPE(context) == T_HASH ? \n"
-          @code << "   rb_hash_aref(context, ID2SYM(rb_intern(#{@buffer.dump}))) : \n"
-          @code << "   rb_funcall(context, rb_intern(#{@buffer.dump}), 0))) {\n"
+          @code << "if(RTEST(TYPE(context) == T_HASH ? \n" \
+                   "   rb_hash_aref(context, ID2SYM(rb_intern(#{@buffer.dump}))) :\n" \
+                   "   rb_funcall(context, rb_intern(#{@buffer.dump}), 0))) {\n"
 
           @buffer = ''
           fgoto main;
@@ -53,9 +53,13 @@ class SpeedStache::Compiler
           @code << "       rb_hash_aref(context, ID2SYM(rb_intern(#{@buffer.dump}))) :\n"
           @code << "       rb_funcall(context, rb_intern(#{@buffer.dump}), 0);\n"
           @code << "StringValue(temp);\n"
-          @code << "push(output_list, RSTRING(temp)->ptr, RSTRING(temp)->len);\n"
+          # @code << "push(output_list, RSTRING(temp)->ptr, RSTRING(temp)->len);\n"
+          @code << "c#{@var_counter} = RSTRING(temp)->ptr;\n"
+          @code << "s#{@var_counter} = RSTRING(temp)->len;\n"
           @code << "out_size += RSTRING(temp)->len;\n"
+
           @buffer = ''
+          @var_counter += 1
 
           fgoto main;
         };
@@ -114,11 +118,14 @@ class SpeedStache::Compiler
     template.gsub! '{{NAME}}', @name
     template.gsub! '{{CLASS_NAME}}', @name.capitalize
     template.gsub! '{{CODE}}', @code
+    template.gsub! '{{DEFINITIONS}}', definitions
+    template.gsub! '{{COMBINE}}', combine
   end
 
   def initialize(file)
     @code = ''
     @buffer = ''
+    @var_counter = 0
 
     @name = File.basename(file.path).split('.').first
 
@@ -129,15 +136,30 @@ class SpeedStache::Compiler
   attr_reader :data, :eof, :name
 
   def flush
-    @code << "push(output_list, #{@buffer.dump}, #{@buffer.size});\n"
+    @code << "c#{@var_counter} = #{@buffer.dump};\n"
+    @code << "s#{@var_counter} = #{@buffer.size};\n"
     @code << "out_size += #{@buffer.size};\n"
+
+    @var_counter += 1
+
     @buffer = ''
   end
-end
 
-if __FILE__ == $0
-  compiler = TemplateCompiler.new(ARGF)
-  File.open("#{compiler.name}_template.c",'w') do |f|
-    f.puts compiler.compile
+  def combine
+    code = ''
+    (0..@var_counter-1).each do |index|
+      code << "memcpy(final_output + output_index, c#{index}, s#{index});\n"
+      code << "output_index += s#{index};\n"
+    end
+    code
+  end
+
+  def definitions
+    code = ''
+    (0..@var_counter-1).each do |index|
+      code << "char * c#{index};\n"
+      code << "int s#{index};\n"
+    end
+    code
   end
 end

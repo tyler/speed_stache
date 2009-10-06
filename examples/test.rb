@@ -11,7 +11,8 @@ class Simple < Mustache
 end
 
 t = Time.now
-10_000.times { Simple.new.to_html }
+s = Simple.new
+10_000.times { s.to_html }
 p Time.now - t
 
 require '../lib/speed_stache'
@@ -26,5 +27,6 @@ class Simple
 end
 
 t = Time.now
-10_000.times { Simple.new.to_html }
+s = Simple.new
+10_000.times { s.to_html }
 p Time.now - t

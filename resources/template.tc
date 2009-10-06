@@ -3,60 +3,26 @@
 #include <string.h>
 #include <ruby.h>
 
-typedef struct _node {
-  char * string;
-  int size;
-  struct _node * next;
-} node;
-
-typedef struct _linked_list {
-  node * head;
-  node * tail;  
-} linked_list;
-
-void push(linked_list * list, char * string, int size) {
-  node * new_node = (node *) malloc(sizeof(node));
-  new_node->string = string;
-  new_node->size = size;
-  new_node->next = NULL;
-  list->tail->next = new_node;
-  list->tail = new_node;
-}
+VALUE each_sym;
 
 VALUE rb_compiled_template(VALUE self) {
-
-	linked_list * output_list = (linked_list *) malloc(sizeof(linked_list));
-	node * head = (node *) malloc(sizeof(node));
-	output_list->head = head;
-	output_list->tail = head;
-	
+	each_sym = ID2SYM(rb_intern("each"));
 	int out_size = 0;
-
-	VALUE context = self;	
+	VALUE context = self;
 	VALUE temp;
 	char * temp_string;
+
+	{{DEFINITIONS}}
 
 	{{CODE}}
 
 	char * final_output = (char *) malloc(out_size + 1);
+    int output_index = 0;
 
-	int output_index = 0;
-	node * current_node = output_list->head;
-	node * last_node = current_node;
-	
-	while(current_node = current_node->next) {
-		free(last_node);
-		memcpy(final_output + output_index, current_node->string, current_node->size);
-		output_index += current_node->size;
-		last_node = current_node;
-	}
-	
-	free(last_node);
-	free(output_list);
+	{{COMBINE}}
+
 	final_output[out_size] = '\0';
-	
-	return rb_str_new2(final_output);
-	
+	return rb_str_new(final_output, out_size);
 }
 
 VALUE cTemplate;
