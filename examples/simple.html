@@ -2,7 +2,14 @@
   Dear {{name}},
 
   What's up?
-  {{#cool?}} You're cool! {{/cool?}}
+
+  {{#cool?}}
+  You're cool!
+  {{/cool?}}
+
+  {{#messages}}
+    {{< message}}
+  {{/messages}}
 
   Love,
   Tyler
