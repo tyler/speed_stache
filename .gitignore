@@ -1,0 +1,6 @@
+.#*
+#*
+*~
+*.o
+*.bundle
+Makefile
