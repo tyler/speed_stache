@@ -16,6 +16,3 @@ module SpeedStache
   end
 end
 
-class Mustache
-  include SpeedStache
-end
