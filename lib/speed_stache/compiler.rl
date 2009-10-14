@@ -125,10 +125,13 @@ class SpeedStache::Compiler
 
         '{{<' space* {
           # partial
+          
         };
 
         '{{{' space* {
 	  # unescaped output
+          flush_constant;
+          fgoto output;
         };
 
         '{{#' space* {
@@ -172,6 +175,8 @@ class SpeedStache::Compiler
 
   def initialize(file)
     @name = File.basename(file.path).split('.').first
+    directory = File.dirname(file.path)
+
     @buffer = ''
 
     # output buffer for variable definitions
@@ -190,6 +195,10 @@ class SpeedStache::Compiler
     @next_block_id = 1
 
     @data = file.read
+    @data.gsub!(/\{\{<\s*(.*)\s*\}\}/) do
+      File.read File.join(directory, "#{$1}.html")
+    end
+
     @eof = data.size
   end
 

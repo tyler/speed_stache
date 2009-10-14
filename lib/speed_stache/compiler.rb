@@ -564,20 +564,20 @@ when 20 then
 		end
 # line 115 "../util/../lib/speed_stache/compiler.rl"
 when 21 then
-# line 152 "../util/../lib/speed_stache/compiler.rl"
+# line 155 "../util/../lib/speed_stache/compiler.rl"
 		begin
 te = p+1
  begin 
           @buffer << data[p].chr
          end
 		end
-# line 152 "../util/../lib/speed_stache/compiler.rl"
+# line 155 "../util/../lib/speed_stache/compiler.rl"
 when 22 then
-# line 156 "../util/../lib/speed_stache/compiler.rl"
+# line 159 "../util/../lib/speed_stache/compiler.rl"
 		begin
 te = p+1
 		end
-# line 156 "../util/../lib/speed_stache/compiler.rl"
+# line 159 "../util/../lib/speed_stache/compiler.rl"
 when 23 then
 # line 121 "../util/../lib/speed_stache/compiler.rl"
 		begin
@@ -600,20 +600,29 @@ when 24 then
 te = p
 p = p - 1; begin 
           # partial
+          
          end
 		end
 # line 126 "../util/../lib/speed_stache/compiler.rl"
 when 25 then
-# line 130 "../util/../lib/speed_stache/compiler.rl"
+# line 131 "../util/../lib/speed_stache/compiler.rl"
 		begin
 te = p
 p = p - 1; begin 
 	  # unescaped output
+          flush_constant;
+          	begin
+		cs = 26
+		_trigger_goto = true
+		_goto_level = _again
+		break
+	end
+
          end
 		end
-# line 130 "../util/../lib/speed_stache/compiler.rl"
+# line 131 "../util/../lib/speed_stache/compiler.rl"
 when 26 then
-# line 134 "../util/../lib/speed_stache/compiler.rl"
+# line 137 "../util/../lib/speed_stache/compiler.rl"
 		begin
 te = p
 p = p - 1; begin 
@@ -628,9 +637,9 @@ p = p - 1; begin
 
          end
 		end
-# line 134 "../util/../lib/speed_stache/compiler.rl"
+# line 137 "../util/../lib/speed_stache/compiler.rl"
 when 27 then
-# line 140 "../util/../lib/speed_stache/compiler.rl"
+# line 143 "../util/../lib/speed_stache/compiler.rl"
 		begin
 te = p
 p = p - 1; begin 
@@ -645,9 +654,9 @@ p = p - 1; begin
 
          end
 		end
-# line 140 "../util/../lib/speed_stache/compiler.rl"
+# line 143 "../util/../lib/speed_stache/compiler.rl"
 when 28 then
-# line 146 "../util/../lib/speed_stache/compiler.rl"
+# line 149 "../util/../lib/speed_stache/compiler.rl"
 		begin
 te = p
 p = p - 1; begin 
@@ -662,17 +671,17 @@ p = p - 1; begin
 
          end
 		end
-# line 146 "../util/../lib/speed_stache/compiler.rl"
+# line 149 "../util/../lib/speed_stache/compiler.rl"
 when 29 then
-# line 152 "../util/../lib/speed_stache/compiler.rl"
+# line 155 "../util/../lib/speed_stache/compiler.rl"
 		begin
 te = p
 p = p - 1; begin 
           @buffer << data[p].chr
          end
 		end
-# line 152 "../util/../lib/speed_stache/compiler.rl"
-# line 676 "../util/../lib/speed_stache/compiler.rb"
+# line 155 "../util/../lib/speed_stache/compiler.rl"
+# line 685 "../util/../lib/speed_stache/compiler.rb"
 			end # action switch
 		end
 	end
@@ -693,7 +702,7 @@ when 0 then
 		begin
 ts = nil;		end
 # line 1 "../util/../lib/speed_stache/compiler.rl"
-# line 697 "../util/../lib/speed_stache/compiler.rb"
+# line 706 "../util/../lib/speed_stache/compiler.rb"
 		end # to state action switch
 	end
 	if _trigger_goto
@@ -724,7 +733,7 @@ end
 	end
 	end
 
-# line 162 "../util/../lib/speed_stache/compiler.rl"
+# line 165 "../util/../lib/speed_stache/compiler.rl"
 
 
     flush_constant
@@ -738,6 +747,8 @@ end
 
   def initialize(file)
     @name = File.basename(file.path).split('.').first
+    directory = File.dirname(file.path)
+
     @buffer = ''
 
     # output buffer for variable definitions
@@ -756,6 +767,10 @@ end
     @next_block_id = 1
 
     @data = file.read
+    @data.gsub!(/\{\{<\s*(.*)\s*\}\}/) do
+      File.read File.join(directory, "#{$1}.html")
+    end
+
     @eof = data.size
   end
 
