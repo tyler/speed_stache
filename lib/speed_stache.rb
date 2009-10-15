@@ -7,6 +7,10 @@ module SpeedStache
     EOF
   end
 
+  def self.activate!
+    Mustache.send(:include, SpeedStache)
+  end
+
   def to_html_with_compile_check
     if self.respond_to?(:compiled_template)
       compiled_template
